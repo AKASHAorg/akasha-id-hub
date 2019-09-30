@@ -30,8 +30,8 @@ module.exports = function (opts) {
   }
 
   var cors = corsify({
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
+    'Access-Control-Allow-Origin': process.env.CORS || '*',
+    'Access-Control-Allow-Methods': 'GET, POST',
     'Access-Control-Allow-Headers': 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, Authorization'
   })
 
