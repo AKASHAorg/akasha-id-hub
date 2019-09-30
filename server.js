@@ -21,6 +21,9 @@ module.exports = function (opts) {
   var maxBroadcasts = (opts && opts.maxBroadcasts) || Infinity
   var subs = 0
 
+  var allowedOrigins = (opts && opts.cors) ? Array.from(opts.cors.split(','), origin => origin.trim()) : []
+  console.log('Allowed origins:', allowedOrigins)
+
   var get = function (channel) {
     if (channels[channel]) return channels[channel]
     var sub = {name: channel, subscribers: [], heartbeat: null}
@@ -29,8 +32,12 @@ module.exports = function (opts) {
     return channels[channel]
   }
 
+  var getOrigin = function (req, res) {
+    return (allowedOrigins && allowedOrigins.includes(req.headers.origin)) ? req.headers.origin : ''
+  }
+
   var cors = corsify({
-    'Access-Control-Allow-Origin': process.env.CORS || '*',
+    'getOrigin': getOrigin,
     'Access-Control-Allow-Methods': 'GET, POST',
     'Access-Control-Allow-Headers': 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, Authorization'
   })
