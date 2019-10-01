@@ -24,7 +24,7 @@ if (argv.version) console.log(require('./package.json').version)
 else if (cmd === 'listen') listen()
 else if (cmd === 'subscribe') subscribe()
 else if (cmd === 'broadcast') broadcast()
-else console.error('Usage: signalhub listen|subscribe|broadcast')
+else listen() // listen by default
 
 function listen () {
   var max = Number(argv['max-broadcasts']) || 0
