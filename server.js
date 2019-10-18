@@ -6,6 +6,7 @@ var pump = require('pump')
 var iterate = require('random-iterate')
 var limiter = require('size-limit-stream')
 var eos = require('end-of-stream')
+var origins = require('./origins.json') || {}
 
 var flushHeaders = function (res) {
   if (res.flushHeaders) {
@@ -21,8 +22,7 @@ module.exports = function (opts) {
   var maxBroadcasts = (opts && opts.maxBroadcasts) || Infinity
   var subs = 0
 
-  var allowedOrigins = (opts && opts.cors) ? Array.from(opts.cors.split(','), origin => origin.trim()) : []
-  console.log('Allowed origins:', allowedOrigins)
+  console.log('Imported origins:', origins)
 
   var get = function (channel) {
     if (channels[channel]) return channels[channel]
@@ -33,7 +33,7 @@ module.exports = function (opts) {
   }
 
   var getOrigin = function (req, res) {
-    return (allowedOrigins && allowedOrigins.includes(req.headers.origin)) ? req.headers.origin : ''
+    return (origins.allowed && origins.allowed.includes(req.headers.origin)) ? req.headers.origin : ''
   }
 
   var cors = corsify({
