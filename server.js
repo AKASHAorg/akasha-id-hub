@@ -59,7 +59,8 @@ module.exports = function (opts) {
     var name = req.url.slice(4).split('?')[0]
 
     if (req.method === 'POST') {
-      collect(pump(req, limiter(64 * 1024)), function (err, data) {
+      res.setHeader('X-Accel-Buffering', 'no')
+      collect(pump(req, limiter(2048 * 1024)), function (err, data) {
         if (err) return res.end()
         if (!channels[name]) return res.end()
         var channel = get(name)
